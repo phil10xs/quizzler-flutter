@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'question_brain.dart';
 
 QuizBrain quizBrain = QuizBrain();
@@ -33,6 +34,28 @@ class _QuizPageState extends State<QuizPage> {
   void checkAnswer(bool userPickedAnswer) {
     bool correctAnswer = quizBrain.getCorrectAnswer();
 
+    setState(() {
+      if (quizBrain.isFinished() == true) {
+        Alert(
+          context: context,
+          type: AlertType.error,
+          title: "Hey Champion",
+          desc: "Weldone!! You have finished the Quiz, restart or cancel",
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Restart",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.pop(context),
+              width: 120,
+            )
+          ],
+        ).show();
+        quizBrain.reset();
+        scoreKeeper = [];
+      }
+
     if (userPickedAnswer == correctAnswer) {
       scoreKeeper.add(
           Icon(Icons.check,
@@ -42,6 +65,7 @@ class _QuizPageState extends State<QuizPage> {
         Icon(Icons.close,
         color: Colors.red));
     }
+  });
   }
 
   @override
